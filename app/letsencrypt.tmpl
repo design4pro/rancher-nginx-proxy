@@ -1,0 +1,32 @@
+{{- $Default_email := or (env "DEFAULT_EMAIL") "foo@bar.com" -}}
+
+LETSENCRYPT_CONTAINERS=(
+{{- range $host, $services := services | groupByMulti "nginx_proxy.letencrypt_host" "," -}}
+{{- range $service := $services -}} 
+'{{ formatClean $host }}' {{ end -}}{{- end -}}
+{{- range $host, $conts := host.Containers | groupByMultiFilter "" "nginx_proxy.le_host" "," -}}
+'{{ formatClean $host }}' {{ end -}}
+
+)
+
+{{ range $host, $services := services | groupByMulti "nginx_proxy.letencrypt_host" "," -}}
+
+{{- range $service := $services }}
+{{- $cid := formatClean $host }}
+
+LETSENCRYPT_{{$cid}}_HOST=( '{{$host}}' )
+LETSENCRYPT_{{$cid}}_EMAIL="{{.Labels.GetValue "nginx_proxy.letencrypt_email" $Default_email}}"
+LETSENCRYPT_{{$cid}}_TEST="{{.Labels.GetValue "nginx_proxy.letencrypt_test"}}"
+
+{{- end -}}
+{{- end -}}
+
+{{ range $host, $conts := host.Containers | groupByMultiFilter "" "nginx_proxy.letencrypt_host" "," }}
+{{- $first_cont := first $conts }}
+{{- $cid := formatClean $host }}
+
+LETSENCRYPT_{{$cid}}_HOST=( '{{$host}}' )
+LETSENCRYPT_{{$cid}}_EMAIL="{{ $first_cont.Labels.GetValue "nginx_proxy.letencrypt_email" $Default_email}}"
+LETSENCRYPT_{{$cid}}_TEST="{{ $first_cont.Labels.GetValue "nginx_proxy.letencrypt_test"}}"
+
+{{- end -}}

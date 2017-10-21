@@ -1,0 +1,18 @@
+version: '2'
+services:
+  Proxy:
+    image: doocker4pro/rancher-nginx-proxy
+    environment:
+      DEFAULT_HOST: "example.com"
+      DEFAULT_EMAIL: "foo@example.com"
+    stdin_open: true
+    volumes:
+    - /local/path/data/nginx/htpasswd:/etc/nginx/htpasswd
+    - /local/path/data/nginx/vhost.d:/etc/nginx/vhost.d
+    - /local/path/data/nginx/letsencrypt:/etc/letsencrypt
+    tty: true
+    ports:
+    - 80:80/tcp
+    - 443:443/tcp
+    labels:
+      io.rancher.container.pull_image: always
