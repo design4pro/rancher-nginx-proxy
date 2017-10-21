@@ -7,8 +7,7 @@ ARG VERSION_RANCHER_DOCKER_GEN="artifacts/master"
 RUN apk add --no-cache nano ca-certificates unzip wget certbot bash openssl
 
 # Install Forego & rancher-docker-gen
-RUN wget "https://github.com/design4pro/forego/archive/v0.16.1.zip" -O /tmp/forego.zip \
-  && unzip /tmp/forego.zip -d /usr/local/bin
+ADD https://github.com/design4pro/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
 
 RUN wget "https://gitlab.com/design4pro/rancher-docker-gen/builds/$VERSION_RANCHER_DOCKER_GEN/download?job=compile-go" -O /tmp/rancher-docker-gen.zip \
 	&& unzip /tmp/rancher-docker-gen.zip -d /usr/local/bin \
