@@ -1,6 +1,6 @@
 {
   "name": "rancher-nginx-proxy",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Rancher Nginx Proxy",
   "scripts": {
     "release": "release-me --release-count=0"
